@@ -1,0 +1,77 @@
+Bing Translate API Objective-C Client
+Created by Árpád Goretity
+
+Licensed in a CreativeCommons Attribution 3.0 Unported License.
+
+Bing, Bing Translate, Miscrosoft, Microsoft Translate and so on are copyrights, registered trdemarks, intellectual properties and whatevers of Microsoft. I DO NOT WANT TO STEAL THEM, I JUST CAN'T ALWAYS USE EXACT LAW TERMS. SO PLEASE DO NOT SUE ME ON THESE, OK? :) If you have a better way to say this properly, please let me know :) I don't want to experience how good are Microsoft's lawyers.
+
+How to compile this (dummy):
+----------------------------
+Compile as a framework for iOS (thus, without modification, it works only on jailbroken devices. However, with a small modification of the Makefile and your project, the code can be easily incorporated in any, even AppStore app):
+
+mobile@iPhone ~ $ git clone git://github.com/H2CO3/BingTranslate
+mobile@iPhone ~ $ cd BingTranslate
+mobile@iPhone ~ $ sudo make
+
+The last command only works if the proper directory structure is set up on the device beforehands. See Makefile for details.
+Make sure to create and copy the appropriate files to /System/Library/Frameworks/BingTranslate.framework
+
+How to use this:
+----------------
+Go ahead to http://www.microsoft.com/web/post/using-the-free-bing-translation-apis or http://www.bing.com/developers/appids.aspx to obtain an App ID. Then create instances of BTClient and start making translate and speech requests.
+Note that the BTClientDelegate protocol lists all methods as required so you'll need to implement all of them if your delegate is non-NULL.
+
+@interface Whatever: NSObject <BTClientDelegate> {
+	BTClient *client;
+}
+
+@implementation Whatever
+
+- (id) init {
+	self = [super init];
+	client = [[BTClient alloc] initWithAppID:@"0123456789abcdefqwerty"];
+	client.delegate = self;
+	return self;
+}
+
+- (void) dealloc {
+	[client release];
+	[super dealloc];
+}
+
+- (void) randomMethod {
+	[client translateText:@"Hello World!" toLanguage:@"fr"];
+}
+
+- (void) obscurelyNamedMethod {
+	[client translateArray:[NSArray arrayWithObject:@"What's the point of a 1-element array?"] toLanguage:@"it"];
+}
+
+- (void) shoutingMethod {
+	[client speakText:@"Peter Piper picked a peck of pickled peppers." inLanguage:@"en"]; // LOL
+}
+
+- (void) bingTranslateClient:(BTClient *)client translatedText:(NSString *)text translation:(NSString *)translation {
+	NSLog(@"If Bing is right, then (@% == %@) == true.", text, translation);
+}
+
+- (void) bingTranslateClient:(BTClient *)client translatedArray:(NSArray *)array translations:(NSArray *)translations {
+	for (int i = 0; i < [array count]; i++) {
+		NSDictionary *dict = [translations objectAtIndex:i];
+		NSLog(@"'%@' in %@ means '%@'", [array objectAtIndex:i], [dict objectForKey:BTResultKeySourceLanguage], [dict objectForKey:BTResultKeyTransaltion]]);
+}
+
+- (void) bingTranslateClient:(BTClient *)client willStartSpeakingText:(NSString *)text inLanguage:(NSString *)language {
+	// do stuff
+}
+
+- (void) bingTranslateClientFinishedSpeaking:(BTClient *)client {
+	// do stuff again
+}
+
+- (void) bingTranslateClient:(BTClient *)client errorOccurred:(NSError *)error {
+	// freak out user with an obfuscated error message
+}
+
+@end
+

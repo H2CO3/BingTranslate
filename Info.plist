@@ -1,0 +1,14 @@
+<plist>
+<dict>
+	<key>CFBundleIdentifier</key>
+	<string>org.h2co3.bingtranslate</string>
+	<key>CFBundleName</key>
+	<string>BingTranslate</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleVersion</key>
+	<string>0.4</string>
+	<key>CFBundleExecutable</key>
+	<string>BingTranslate</string>
+</dict>
+</plist>
